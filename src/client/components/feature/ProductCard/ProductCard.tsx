@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const ProductCard: FC<Props> = ({ product }) => {
-  const thumbnailFile = product.media.find((productMedia) => productMedia.isThumbnail)?.file;
+  const thumbnailFileName = product.thumbnail;
 
   const { activeOffer } = useActiveOffer(product);
   const price = activeOffer?.price ?? product.price;
@@ -23,20 +23,22 @@ export const ProductCard: FC<Props> = ({ product }) => {
   return (
     <Anchor href={`/product/${product.id}`}>
       <div className={styles.inner()}>
-        {thumbnailFile ? (
+        {thumbnailFileName ? (
           <div className={styles.image()}>
             <AspectRatio ratioHeight={9} ratioWidth={16}>
-              <Image height={126} src={thumbnailFile.filename} width={224} />
+              <Image height={126} src={thumbnailFileName} width={224} />
             </AspectRatio>
           </div>
         ) : null}
         <div className={styles.description()}>
           <p className={styles.itemName()}>{product.name}</p>
-          <span className={styles.itemPrice()}>{currencyFormatter.format(price, { code: 'JPY', precision: 0 })}</span>
+          <span className={styles.itemPrice()}>
+            {currencyFormatter.format(price, { code: 'JPY', precision: 0 })}
+          </span>
         </div>
         {activeOffer !== undefined && (
           <div className={styles.label()}>
-            <ProductOfferLabel size="base">タイムセール中</ProductOfferLabel>
+            <ProductOfferLabel size='base'>タイムセール中</ProductOfferLabel>
           </div>
         )}
       </div>

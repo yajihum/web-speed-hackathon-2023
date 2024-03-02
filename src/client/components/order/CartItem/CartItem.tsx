@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const CartItem: FC<Props> = ({ item, onRemove, onUpdate }) => {
-  const thumbnailFile = item.product.media.find((productMedia) => productMedia.isThumbnail)?.file;
+  const thumbnailFileName = item.product.thumbnail;
   const { activeOffer } = useActiveOffer(item.product);
   const price = activeOffer?.price ?? item.product.price;
 
@@ -43,19 +43,23 @@ export const CartItem: FC<Props> = ({ item, onRemove, onUpdate }) => {
             <div className={styles.item()}>
               <Anchor href={`/product/${item.product.id}`}>
                 <div className={styles.itemInner()}>
-                  {thumbnailFile ? (
+                  {thumbnailFileName ? (
                     <div
                       className={classNames(styles.thumbnail(), {
-                        [styles.thumbnail__desktop()]: deviceType === DeviceType.DESKTOP,
-                        [styles.thumbnail__mobile()]: deviceType === DeviceType.MOBILE,
+                        [styles.thumbnail__desktop()]:
+                          deviceType === DeviceType.DESKTOP,
+                        [styles.thumbnail__mobile()]:
+                          deviceType === DeviceType.MOBILE,
                       })}
                     >
                       <AspectRatio ratioHeight={9} ratioWidth={16}>
-                        <Image fill src={thumbnailFile.filename} />
+                        <Image fill src={thumbnailFileName} />
                       </AspectRatio>
                       {activeOffer !== undefined && (
                         <div className={styles.offerLabel()}>
-                          <ProductOfferLabel size="base">タイムセール中</ProductOfferLabel>
+                          <ProductOfferLabel size='base'>
+                            タイムセール中
+                          </ProductOfferLabel>
                         </div>
                       )}
                     </div>
@@ -63,7 +67,10 @@ export const CartItem: FC<Props> = ({ item, onRemove, onUpdate }) => {
                   <div className={styles.details()}>
                     <p className={styles.itemName()}>{item.product.name}</p>
                     <p className={styles.itemPrice()}>
-                      {currencyFormatter.format(price, { code: 'JPY', precision: 0 })}
+                      {currencyFormatter.format(price, {
+                        code: 'JPY',
+                        precision: 0,
+                      })}
                     </p>
                   </div>
                 </div>
@@ -71,7 +78,8 @@ export const CartItem: FC<Props> = ({ item, onRemove, onUpdate }) => {
             </div>
             <div
               className={classNames(styles.container(), {
-                [styles.controller__desktop()]: deviceType === DeviceType.DESKTOP,
+                [styles.controller__desktop()]:
+                  deviceType === DeviceType.DESKTOP,
                 [styles.controller__mobile()]: deviceType === DeviceType.MOBILE,
               })}
             >
@@ -83,10 +91,13 @@ export const CartItem: FC<Props> = ({ item, onRemove, onUpdate }) => {
                   max={999}
                   min={1}
                   onBlur={updateCount}
-                  type="number"
+                  type='number'
                 />
               </label>
-              <OutlineButton onClick={() => onRemove(item.product.id)} size="base">
+              <OutlineButton
+                onClick={() => onRemove(item.product.id)}
+                size='base'
+              >
                 削除
               </OutlineButton>
             </div>

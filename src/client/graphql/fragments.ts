@@ -29,7 +29,10 @@ export const LimitedTimeOfferFragment = gql`
     endDate
   }
 `;
-export type LimitedTimeOfferFragmentResponse = Pick<LimitedTimeOffer, 'id' | 'price' | 'startDate' | 'endDate'>;
+export type LimitedTimeOfferFragmentResponse = Pick<
+  LimitedTimeOffer,
+  'id' | 'price' | 'startDate' | 'endDate'
+>;
 
 export const ProductMediaFragment = gql`
   ${MediaFileFragment}
@@ -42,7 +45,10 @@ export const ProductMediaFragment = gql`
     }
   }
 `;
-export type ProductMediaFragmentResponse = Pick<ProductMedia, 'id' | 'isThumbnail'> & {
+export type ProductMediaFragmentResponse = Pick<
+  ProductMedia,
+  'id' | 'isThumbnail'
+> & {
   file: MediaFileFragmentResponse;
 };
 
@@ -63,10 +69,27 @@ export const ProductFragment = gql`
     }
   }
 `;
-export type ProductFragmentResponse = Pick<Product, 'id' | 'name' | 'price' | 'description'> & {
+export type ProductFragmentResponse = Pick<
+  Product,
+  'id' | 'name' | 'price' | 'description' | 'thumbnail'
+> & {
   media: ProductMediaFragmentResponse[];
   offers: LimitedTimeOfferFragmentResponse[];
 };
+
+export const ProductWithoutMediaFragment = gql`
+  ${LimitedTimeOfferFragment}
+  fragment ProductWithoutMediaFragment on Product {
+    id
+    name
+    price
+    description
+    thumbnail
+    offers {
+      ...LimitedTimeOfferFragment
+    }
+  }
+`;
 
 export const ProfileFragment = gql`
   ${MediaFileFragment}
@@ -110,7 +133,10 @@ export const ReviewFragment = gql`
     }
   }
 `;
-export type ReviewFragmentResponse = Pick<Review, 'id' | 'postedAt' | 'comment'> & {
+export type ReviewFragmentResponse = Pick<
+  Review,
+  'id' | 'postedAt' | 'comment'
+> & {
   user: UserFragmentResponse;
 };
 
@@ -142,13 +168,23 @@ export type ProductWithReviewFragmentResponse = ProductFragmentResponse & {
   reviews: ReviewFragmentResponse[];
 };
 
-export const RecommendationFragment = gql`
-  ${ProductFragment}
+// export const RecommendationFragment = gql`
+//   ${ProductFragment}
 
+//   fragment RecommendationFragment on Recommendation {
+//     id
+//     product {
+//       ...ProductFragment
+//     }
+//   }
+// `;
+
+export const RecommendationFragment = gql`
+  ${ProductWithoutMediaFragment}
   fragment RecommendationFragment on Recommendation {
     id
     product {
-      ...ProductFragment
+      ...ProductWithoutMediaFragment
     }
   }
 `;
@@ -167,7 +203,10 @@ export const ShoppingCartItemFragment = gql`
     }
   }
 `;
-export type ShoppingCartItemFragmentResponse = Pick<ShoppingCartItem, 'id' | 'amount'> & {
+export type ShoppingCartItemFragmentResponse = Pick<
+  ShoppingCartItem,
+  'id' | 'amount'
+> & {
   product: ProductWithReviewFragmentResponse;
 };
 
@@ -184,7 +223,10 @@ export const OrderFragment = gql`
     }
   }
 `;
-export type OrderFragmentResponse = Pick<Order, 'id' | 'zipCode' | 'address' | 'isOrdered'> & {
+export type OrderFragmentResponse = Pick<
+  Order,
+  'id' | 'zipCode' | 'address' | 'isOrdered'
+> & {
   items: ShoppingCartItemFragmentResponse[];
 };
 
@@ -209,12 +251,12 @@ export type AuthUserFragmentResponse = UserFragmentResponse & {
 };
 
 export const FeatureItemFragment = gql`
-  ${ProductFragment}
+  ${ProductWithoutMediaFragment}
 
   fragment FeatureItemFragment on FeatureItem {
     id
     product {
-      ...ProductFragment
+      ...ProductWithoutMediaFragment
     }
   }
 `;
@@ -233,6 +275,9 @@ export const FeatureSectionFragment = gql`
     }
   }
 `;
-export type FeatureSectionFragmentResponse = Pick<FeatureSection, 'id' | 'title'> & {
+export type FeatureSectionFragmentResponse = Pick<
+  FeatureSection,
+  'id' | 'title'
+> & {
   items: FeatureItemFragmentResponse[];
 };

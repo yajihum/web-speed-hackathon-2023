@@ -1,8 +1,4 @@
 import type { FC, ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { throttle } from 'throttle-debounce';
-
-import * as styles from './AspectRatio.styles';
 
 type Props = {
   ratioWidth: number;
@@ -10,32 +6,26 @@ type Props = {
   children: ReactNode;
 };
 
-export const AspectRatio: FC<Props> = ({ children, ratioHeight, ratioWidth }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [clientHeight, setClientHeight] = useState<number>(0);
-
-  useEffect(() => {
-    const updateClientHeight = throttle(1000, () => {
-      const width = containerRef.current?.getBoundingClientRect().width ?? 0;
-      const height = (width * ratioHeight) / ratioWidth;
-      setClientHeight(height);
-    });
-
-    let timer = (function tick() {
-      return setImmediate(() => {
-        updateClientHeight();
-        timer = tick();
-      });
-    })();
-
-    return () => {
-      clearImmediate(timer);
-    };
-  }, [ratioHeight, ratioWidth]);
+export const AspectRatio: FC<Props> = ({
+  children,
+  ratioHeight,
+  ratioWidth,
+}) => {
+  const aspectRatioPercentage = (ratioHeight / ratioWidth) * 100;
 
   return (
-    <div ref={containerRef} className={styles.container({ clientHeight })}>
-      {children}
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        paddingBottom: `${aspectRatioPercentage}%`,
+      }}
+    >
+      <div
+        style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
+      >
+        {children}
+      </div>
     </div>
   );
 };

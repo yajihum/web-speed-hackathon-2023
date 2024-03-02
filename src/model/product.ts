@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, type Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
 
 import { LimitedTimeOffer } from './limited_time_offer';
 import { ProductMedia } from './product_media';
@@ -18,12 +24,24 @@ export class Product {
   @Column()
   description!: string;
 
-  @OneToMany(() => ProductMedia, (media) => media.product)
+  @Column({ nullable: true })
+  thumbnail!: string;
+
+  @OneToMany(
+    () => ProductMedia,
+    (media) => media.product,
+  )
   media!: Relation<ProductMedia[]>;
 
-  @OneToMany(() => LimitedTimeOffer, (offer) => offer.product)
+  @OneToMany(
+    () => LimitedTimeOffer,
+    (offer) => offer.product,
+  )
   offers!: Relation<LimitedTimeOffer[]>;
 
-  @OneToMany(() => Review, (review) => review.product)
+  @OneToMany(
+    () => Review,
+    (review) => review.product,
+  )
   reviews!: Relation<Review[]>;
 }

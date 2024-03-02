@@ -23,7 +23,9 @@ import { getFileList } from './get_file_list';
 
 const TZ = process.env.TZ ?? 'Asia/Tokyo';
 const BASE_DATE = process.env.SEED_BASE_UNIXTIME
-  ? Temporal.Instant.fromEpochMilliseconds(Number(process.env.SEED_BASE_UNIXTIME))
+  ? Temporal.Instant.fromEpochMilliseconds(
+      Number(process.env.SEED_BASE_UNIXTIME),
+    )
   : Temporal.Now.instant();
 
 const familyNames = [
@@ -131,7 +133,12 @@ async function seedMediaFiles(): Promise<MediaFile[]> {
   const publicDir = path.resolve(__dirname, '../public');
   const imageDir = path.resolve(publicDir, 'images');
   const videoDir = path.resolve(publicDir, 'videos');
-  const files = (await Promise.all([await getFileList(imageDir), await getFileList(videoDir)])).flat();
+  const files = (
+    await Promise.all([
+      await getFileList(imageDir),
+      await getFileList(videoDir),
+    ])
+  ).flat();
   const filenames = files.map((file) => {
     const relativePath = path.relative(publicDir, file);
     return '/' + relativePath;
@@ -149,7 +156,9 @@ async function seedMediaFiles(): Promise<MediaFile[]> {
   return mediaList;
 }
 
-async function seedUsers({ mediaList }: { mediaList: MediaFile[] }): Promise<User[]> {
+async function seedUsers({
+  mediaList,
+}: { mediaList: MediaFile[] }): Promise<User[]> {
   let index = 1;
 
   const avatars = mediaList.filter((m) => m.filename.includes('/avatars/'));
@@ -182,7 +191,9 @@ async function seedUsers({ mediaList }: { mediaList: MediaFile[] }): Promise<Use
   return users;
 }
 
-async function seedProducts({ mediaList }: { mediaList: MediaFile[] }): Promise<Product[]> {
+async function seedProducts({
+  mediaList,
+}: { mediaList: MediaFile[] }): Promise<Product[]> {
   let index = 1;
 
   const products: Product[] = [];
@@ -220,6 +231,8 @@ async function seedProducts({ mediaList }: { mediaList: MediaFile[] }): Promise<
         product.price = 1000 + 90 * (index % 10);
         product.media = productMediaList;
         product.description = descriptions[index % descriptions.length];
+        product.thumbnail =
+          productMediaList[index % productMediaList.length].file.filename;
         products.push(product);
 
         if (index % 30 === 0) {
@@ -231,18 +244,25 @@ async function seedProducts({ mediaList }: { mediaList: MediaFile[] }): Promise<
         if (index % 3 === 0) {
           const offerHour = index % 24;
           for (let offset = -10; offset <= 10; offset++) {
-            const startDate = BASE_DATE.toZonedDateTimeISO(TZ).add({ days: offset }).withPlainTime({
-              hour: offerHour,
-              minute: 0,
-              second: 0,
-            });
+            const startDate = BASE_DATE.toZonedDateTimeISO(TZ)
+              .add({ days: offset })
+              .withPlainTime({
+                hour: offerHour,
+                minute: 0,
+                second: 0,
+              });
             const endDate = startDate.add({ hours: 2 });
-            const discountRate = discountRates[(index + Math.abs(offset)) % discountRates.length];
+            const discountRate =
+              discountRates[(index + Math.abs(offset)) % discountRates.length];
 
             const offer = new LimitedTimeOffer();
             offer.product = product;
-            offer.startDate = startDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
-            offer.endDate = endDate.toInstant().toString({ timeZone: Temporal.TimeZone.from('UTC') });
+            offer.startDate = startDate
+              .toInstant()
+              .toString({ timeZone: Temporal.TimeZone.from('UTC') });
+            offer.endDate = endDate
+              .toInstant()
+              .toString({ timeZone: Temporal.TimeZone.from('UTC') });
             offer.price = Math.floor(product.price * (1 - discountRate));
             offers.push(offer);
           }
@@ -260,16 +280,27 @@ async function seedProducts({ mediaList }: { mediaList: MediaFile[] }): Promise<
   return products;
 }
 
-async function seedFeatureSections({ products }: { products: Product[] }): Promise<void> {
-  for (let sectionIndex = 0; sectionIndex < featureSections.length; sectionIndex++) {
+async function seedFeatureSections({
+  products,
+}: { products: Product[] }): Promise<void> {
+  for (
+    let sectionIndex = 0;
+    sectionIndex < featureSections.length;
+    sectionIndex++
+  ) {
     const section = new FeatureSection();
     section.title = featureSections[sectionIndex];
 
     const items: FeatureItem[] = [];
-    const filteredProducts = products.filter((_, i) => i % (sectionIndex + 1) === 0);
+    const filteredProducts = products.filter(
+      (_, i) => i % (sectionIndex + 1) === 0,
+    );
     const totalNumberOfChunks = Math.floor(filteredProducts.length / 25);
     const selectedChunkIndex = sectionIndex % totalNumberOfChunks;
-    const selectedChunk = filteredProducts.slice(25 * selectedChunkIndex, 25 * (selectedChunkIndex + 1));
+    const selectedChunk = filteredProducts.slice(
+      25 * selectedChunkIndex,
+      25 * (selectedChunkIndex + 1),
+    );
 
     selectedChunk.forEach((product) => {
       const item = new FeatureItem();
@@ -285,12 +316,16 @@ async function seedFeatureSections({ products }: { products: Product[] }): Promi
   }
 }
 
-async function seedReviews({ products, users }: { users: User[]; products: Product[] }): Promise<void> {
+async function seedReviews({
+  products,
+  users,
+}: { users: User[]; products: Product[] }): Promise<void> {
   const reviews: Review[] = [];
 
   for (let userIndex = 0; userIndex < users.length; userIndex++) {
     for (let productIndex = 0; productIndex < products.length; productIndex++) {
-      const isTarget = productIndex % 2 === userIndex % 2 && productIndex % userIndex === 0;
+      const isTarget =
+        productIndex % 2 === userIndex % 2 && productIndex % userIndex === 0;
 
       if (!isTarget) {
         continue;
@@ -308,7 +343,9 @@ async function seedReviews({ products, users }: { users: User[]; products: Produ
     .subtract({ years: 1 })
     .with({ day: 1, month: 1 })
     .withPlainTime();
-  const duration = BASE_DATE.since(START_OF_LAST_YEAR.toInstant()).round('second').total('second');
+  const duration = BASE_DATE.since(START_OF_LAST_YEAR.toInstant())
+    .round('second')
+    .total('second');
   const interval = Math.floor(duration / reviews.length);
 
   reviews.forEach((review, index) => {
@@ -321,8 +358,14 @@ async function seedReviews({ products, users }: { users: User[]; products: Produ
   await insert(reviews);
 }
 
-async function seedOrders({ products, users }: { users: User[]; products: Product[] }): Promise<void> {
-  const productsChunks = chunk(products, Math.floor(products.length / users.length));
+async function seedOrders({
+  products,
+  users,
+}: { users: User[]; products: Product[] }): Promise<void> {
+  const productsChunks = chunk(
+    products,
+    Math.floor(products.length / users.length),
+  );
 
   for (const [idx, user] of users.entries()) {
     const order = new Order();
