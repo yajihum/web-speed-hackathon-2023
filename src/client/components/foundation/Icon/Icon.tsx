@@ -1,20 +1,23 @@
 import classNames from 'classnames';
 import type { FC } from 'react';
-import * as Icons from 'react-icons/fa';
 
 import * as styles from './Icon.styles';
+import { svgs } from './svgs';
 
 type Props = {
-  type: keyof typeof Icons;
+  type: keyof typeof svgs;
   width: number;
   height: number;
   color: string;
 };
 
 export const Icon: FC<Props> = ({ color, height, type, width }) => {
-  const Icon = Icons[type];
+  const Icon = svgs[type];
+
   return (
-    <span className={classNames(type, styles.container({ color, height, width }))}>
+    <span
+      className={classNames(type, styles.container({ color, height, width }))}
+    >
       <Icon />
     </span>
   );
