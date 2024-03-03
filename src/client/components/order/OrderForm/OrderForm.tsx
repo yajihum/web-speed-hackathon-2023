@@ -91,3 +91,4 @@ export const OrderForm: FC<Props> = ({ onSubmit }) => {
     </div>
   );
 };
+export default OrderForm;
