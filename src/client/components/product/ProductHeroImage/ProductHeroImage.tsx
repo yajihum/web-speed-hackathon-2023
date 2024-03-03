@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import _ from 'lodash';
 import type { FC } from 'react';
 import { memo, useState } from 'react';
 
@@ -38,6 +37,6 @@ export const ProductHeroImage: FC<Props> = memo(({ product, title }) => {
       </div>
     </Anchor>
   );
-}, _.isEqual);
+});
 
 ProductHeroImage.displayName = 'ProductHeroImage';

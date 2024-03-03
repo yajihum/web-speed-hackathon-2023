@@ -1,9 +1,11 @@
 import * as currencyFormatter from 'currency-formatter';
-import _ from 'lodash';
 import type { FC } from 'react';
 import { memo } from 'react';
 
-import type { LimitedTimeOfferFragmentResponse, ProductFragmentResponse } from '../../../graphql/fragments';
+import type {
+  LimitedTimeOfferFragmentResponse,
+  ProductFragmentResponse,
+} from '../../../graphql/fragments';
 import { ProductOfferLabel } from '../ProductOfferLabel';
 
 import * as styles from './ProductOverview.styles';
@@ -23,7 +25,9 @@ export const ProductOverview: FC<Props> = memo(({ activeOffer, product }) => {
       return;
     }
 
-    const endTime = window.Temporal.Instant.from(activeOffer.endDate).toLocaleString('ja-jp', {
+    const endTime = window.Temporal.Instant.from(
+      activeOffer.endDate,
+    ).toLocaleString('ja-jp', {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
@@ -34,7 +38,7 @@ export const ProductOverview: FC<Props> = memo(({ activeOffer, product }) => {
 
     return (
       <div className={styles.offerLabel()}>
-        <ProductOfferLabel size="lg">
+        <ProductOfferLabel size='lg'>
           <time>{endTime}</time> までタイムセール
         </ProductOfferLabel>
       </div>
@@ -50,15 +54,21 @@ export const ProductOverview: FC<Props> = memo(({ activeOffer, product }) => {
       <div className={styles.priceWrapper()}>
         {activeOffer !== undefined ? (
           <span className={styles.priceWithoutOffer()}>
-            {currencyFormatter.format(product.price, { code: 'JPY', precision: 0 })}
+            {currencyFormatter.format(product.price, {
+              code: 'JPY',
+              precision: 0,
+            })}
           </span>
         ) : null}
         <span className={styles.price()}>
-          {currencyFormatter.format(activeOffer?.price ?? product.price, { code: 'JPY', precision: 0 })}
+          {currencyFormatter.format(activeOffer?.price ?? product.price, {
+            code: 'JPY',
+            precision: 0,
+          })}
         </span>
       </div>
     </div>
   );
-}, _.isEqual);
+});
 
 ProductOverview.displayName = 'ProductOverview';

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import type { FC } from 'react';
 import { memo } from 'react';
 
@@ -19,7 +18,13 @@ type Props = {
 };
 
 export const ProductPurchaseSection: FC<Props> = memo(
-  ({ amountInCart, isAuthUser, onOpenSignInModal, onUpdateCartItem, product }) => {
+  ({
+    amountInCart,
+    isAuthUser,
+    onOpenSignInModal,
+    onUpdateCartItem,
+    product,
+  }) => {
     if (product === undefined) {
       return null;
     }
@@ -29,7 +34,7 @@ export const ProductPurchaseSection: FC<Props> = memo(
         <div className={styles.container()}>
           <div className={styles.signInWrapper()}>
             <span className={styles.signIn()}>購入にはログインが必要です</span>
-            <PrimaryButton onClick={() => onOpenSignInModal()} size="sm">
+            <PrimaryButton onClick={() => onOpenSignInModal()} size='sm'>
               ログイン
             </PrimaryButton>
           </div>
@@ -40,7 +45,10 @@ export const ProductPurchaseSection: FC<Props> = memo(
     if (amountInCart === 0) {
       return (
         <div className={styles.container()}>
-          <PrimaryButton onClick={() => onUpdateCartItem(product.id, 1)} size="sm">
+          <PrimaryButton
+            onClick={() => onUpdateCartItem(product.id, 1)}
+            size='sm'
+          >
             カートに追加
           </PrimaryButton>
         </div>
@@ -51,22 +59,24 @@ export const ProductPurchaseSection: FC<Props> = memo(
       <div className={styles.container()}>
         <p className={styles.amount()}>
           <span className={styles.checkIcon()}>
-            <Icon color="#3BA175" height={18} type="FaCheckCircle" width={18} />
+            <Icon color='#3BA175' height={18} type='FaCheckCircle' width={18} />
           </span>
           <span>{amountInCart}個 カートに追加済み</span>
         </p>
         <div className={styles.actionButtonList()}>
-          <PrimaryAnchor href="/order" size="base">
+          <PrimaryAnchor href='/order' size='base'>
             購入手続きへ
           </PrimaryAnchor>
-          <OutlineButton onClick={() => onUpdateCartItem(product.id, amountInCart + 1)} size="lg">
+          <OutlineButton
+            onClick={() => onUpdateCartItem(product.id, amountInCart + 1)}
+            size='lg'
+          >
             カートに追加
           </OutlineButton>
         </div>
       </div>
     );
   },
-  _.isEqual,
 );
 
 ProductPurchaseSection.displayName = 'ProductPurchaseSection';

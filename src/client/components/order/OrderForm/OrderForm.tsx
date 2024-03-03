@@ -1,5 +1,4 @@
 import { useFormik } from 'formik';
-import _ from 'lodash';
 import type { ChangeEventHandler, FC } from 'react';
 import zipcodeJa from 'zipcode-ja';
 
@@ -34,7 +33,7 @@ export const OrderForm: FC<Props> = ({ onSubmit }) => {
     formik.handleChange(event);
 
     const zipCode = event.target.value;
-    const address = [...(_.cloneDeep(zipcodeJa)[zipCode]?.address ?? [])];
+    const address = [...(zipcodeJa[zipCode]?.address ?? [])];
     const prefecture = address.shift();
     const city = address.join(' ');
 
@@ -44,43 +43,47 @@ export const OrderForm: FC<Props> = ({ onSubmit }) => {
 
   return (
     <div className={styles.container()}>
-      <form className={styles.form()} data-testid="order-form" onSubmit={formik.handleSubmit}>
+      <form
+        className={styles.form()}
+        data-testid='order-form'
+        onSubmit={formik.handleSubmit}
+      >
         <div className={styles.inputList()}>
           <TextInput
             required
-            id="zipCode"
-            label="郵便番号"
+            id='zipCode'
+            label='郵便番号'
             onChange={handleZipcodeChange}
-            placeholder="例: 1500042"
+            placeholder='例: 1500042'
             value={formik.values.zipCode}
           />
           <TextInput
             required
-            id="prefecture"
-            label="都道府県"
+            id='prefecture'
+            label='都道府県'
             onChange={formik.handleChange}
-            placeholder="例: 東京都"
+            placeholder='例: 東京都'
             value={formik.values.prefecture}
           />
           <TextInput
             required
-            id="city"
-            label="市区町村"
+            id='city'
+            label='市区町村'
             onChange={formik.handleChange}
-            placeholder="例: 渋谷区宇田川町"
+            placeholder='例: 渋谷区宇田川町'
             value={formik.values.city}
           />
           <TextInput
             required
-            id="streetAddress"
-            label="番地・建物名など"
+            id='streetAddress'
+            label='番地・建物名など'
             onChange={formik.handleChange}
-            placeholder="例: 40番1号 Abema Towers"
+            placeholder='例: 40番1号 Abema Towers'
             value={formik.values.streetAddress}
           />
         </div>
         <div className={styles.purchaseButton()}>
-          <PrimaryButton size="lg" type="submit">
+          <PrimaryButton size='lg' type='submit'>
             購入
           </PrimaryButton>
         </div>
