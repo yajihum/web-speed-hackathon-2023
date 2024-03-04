@@ -18,7 +18,9 @@ export const ReviewList: FC<Props> = ({ reviews }) => {
   return (
     <ul className={styles.itemList()}>
       {reviews.map((review) => {
-        const endTime = window.Temporal.Instant.from(review.postedAt).toLocaleString('ja-jp', {
+        const endTime = window.Temporal.Instant.from(
+          review.postedAt,
+        ).toLocaleString('ja-jp', {
           day: '2-digit',
           hour: '2-digit',
           minute: '2-digit',
@@ -28,10 +30,22 @@ export const ReviewList: FC<Props> = ({ reviews }) => {
         });
 
         return (
-          <li key={review.id} className={styles.item()} data-testid="review-list-item">
+          <li
+            key={review.id}
+            className={styles.item()}
+            data-testid='review-list-item'
+          >
             <div className={styles.avaterImage()}>
               <AspectRatio ratioHeight={1} ratioWidth={1}>
-                <Image height={52} src={review.user.profile.avatar.filename} width={52} />
+                <Image
+                  height={52}
+                  loading='lazy'
+                  src={review.user.profile.avatar.filename.replace(
+                    '.jpg',
+                    '.webp',
+                  )}
+                  width={52}
+                />
               </AspectRatio>
             </div>
             <div className={styles.content()}>

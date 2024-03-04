@@ -13,7 +13,9 @@
     "enabled": true,
     "rules": {
       "a11y": {
-        "noSvgWithoutTitle": "off"
+        "noSvgWithoutTitle": "off",
+        "useAltText": "off",
+        "useButtonType": "off"
       },
       "recommended": true
     }

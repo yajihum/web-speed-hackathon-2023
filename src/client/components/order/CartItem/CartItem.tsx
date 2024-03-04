@@ -53,7 +53,11 @@ export const CartItem: FC<Props> = ({ item, onRemove, onUpdate }) => {
                       })}
                     >
                       <AspectRatio ratioHeight={9} ratioWidth={16}>
-                        <Image fill src={thumbnailFileName} />
+                        <Image
+                          fill
+                          loading='lazy'
+                          src={thumbnailFileName.replace('.jpg', '.webp')}
+                        />
                       </AspectRatio>
                       {activeOffer !== undefined && (
                         <div className={styles.offerLabel()}>

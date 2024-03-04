@@ -25,8 +25,9 @@ export const ProductHeroImage: FC<Props> = memo(({ product, title }) => {
           <img
             alt={product.name}
             className={onLoad ? styles.image() : styles.hiddenImage()}
+            loading='eager'
             onLoad={() => setOnLoad(true)}
-            src={imageDataUrl}
+            src={imageDataUrl.replace('.jpg', '.webp')}
           />
         </AspectRatio>
 

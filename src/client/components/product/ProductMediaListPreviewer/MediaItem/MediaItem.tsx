@@ -19,7 +19,7 @@ export const MediaItem: FC<Props> = ({ file }) => {
 
   useEffect(() => {
     if (mediaType === 'image') {
-      return setImageSrc(file.filename);
+      return setImageSrc(file.filename.replace('.jpg', '.webp'));
     }
     loadThumbnail(file.filename).then((url) => setImageSrc(url));
   }, [file.filename, mediaType]);
@@ -30,10 +30,10 @@ export const MediaItem: FC<Props> = ({ file }) => {
 
   return (
     <div className={styles.container()}>
-      <Image fill src={imageSrc} />
+      <Image fill loading='lazy' src={imageSrc} />
       {mediaType === 'video' && (
         <div className={styles.playIcon()}>
-          <Icon color="#ffffff" height={16} type="FaPlay" width={16} />
+          <Icon color='#ffffff' height={16} type='FaPlay' width={16} />
         </div>
       )}
     </div>

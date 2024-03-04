@@ -26,7 +26,12 @@ export const ProductCard: FC<Props> = ({ product }) => {
         {thumbnailFileName ? (
           <div className={styles.image()}>
             <AspectRatio ratioHeight={9} ratioWidth={16}>
-              <Image height={126} src={thumbnailFileName} width={224} />
+              <Image
+                height={126}
+                loading='lazy'
+                src={thumbnailFileName.replace('.jpg', '.webp')}
+                width={224}
+              />
             </AspectRatio>
           </div>
         ) : null}
